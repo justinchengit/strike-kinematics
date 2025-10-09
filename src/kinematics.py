@@ -3,4 +3,9 @@ import pandas as pd
 
 def load_dlc(path):
     df = pd.read_csv(path, header=[0, 1, 2], index_col=0)
-    return df
+    df.columns = df.columns.droplevel(0)
+    df.index.name = "frame"
+    long = df.stack(level=0, future_stack=True).reset_index()
+    long = long.rename(columns={long.columns[1]: "bodypart"})
+    long = long[["frame", "bodypart", "x", "y", "likelihood"]]
+    return long
