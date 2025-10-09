@@ -8,4 +8,4 @@ def load_dlc(path):
     long = df.stack(level=0, future_stack=True).reset_index()
     long = long.rename(columns={long.columns[1]: "bodypart"})
     long = long[["frame", "bodypart", "x", "y", "likelihood"]]
-    return long
+    return long.sort_values(["bodypart", "frame"], ignore_index=True)
