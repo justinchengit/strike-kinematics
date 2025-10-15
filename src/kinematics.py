@@ -19,3 +19,7 @@ def filter_likelihood(df, p_cutoff=0.6):
     df = df.copy()
     df.loc[df["likelihood"] < p_cutoff, ["x", "y"]] = np.nan
     return df
+
+
+def fill_short_gaps(s, max_gap=5):
+    return s.interpolate()
