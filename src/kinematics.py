@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -12,3 +13,9 @@ def load_dlc(path):
     long = long.rename(columns={long.columns[1]: "bodypart"})
     long = long[["frame", "bodypart", "x", "y", "likelihood"]]
     return long.sort_values(["bodypart", "frame"], ignore_index=True)
+
+
+def filter_likelihood(df, p_cutoff=0.6):
+    df = df.copy()
+    df.loc[df["likelihood"] < p_cutoff, ["x", "y"]] = np.nan
+    return df
