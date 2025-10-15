@@ -22,4 +22,4 @@ def filter_likelihood(df, p_cutoff=0.6):
 
 
 def fill_short_gaps(s, max_gap=5):
-    return s.interpolate()
+    return s.interpolate(limit_area="inside")
