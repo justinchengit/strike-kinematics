@@ -22,4 +22,7 @@ def filter_likelihood(df, p_cutoff=0.6):
 
 
 def fill_short_gaps(s, max_gap=5):
-    return s.interpolate(limit_area="inside")
+    isna = s.isna()
+    run_len = isna.groupby((isna != isna.shift()).cumsum()).transform("size")
+    filled = s.interpolate(limit_area="inside")
+    return filled.where(~isna | (run_len < max_gap))
