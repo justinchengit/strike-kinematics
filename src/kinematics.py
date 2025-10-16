@@ -26,3 +26,10 @@ def fill_short_gaps(s, max_gap=5):
     run_len = isna.groupby((isna != isna.shift()).cumsum()).transform("size")
     filled = s.interpolate(limit_area="inside")
     return filled.where(~isna | (run_len < max_gap))
+
+
+def interpolate(df, max_gap=5):
+    df = df.copy()
+    for col in ["x", "y"]:
+        df[col] = df.groupby("bodypart")[col].transform(lambda s: fill_short_gaps(s, max_gap))
+    return df
