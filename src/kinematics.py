@@ -1,5 +1,9 @@
 import numpy as np
 import pandas as pd
+from scipy.signal import savgol_filter
+
+WINDOW = 11
+POLYORDER = 3
 
 
 def load_dlc(path):
@@ -40,3 +44,7 @@ def to_meters(df, pixels_per_meter):
     df["x_m"] = df["x"] / pixels_per_meter
     df["y_m"] = df["y"] / pixels_per_meter
     return df
+
+
+def smooth(v):
+    return savgol_filter(v, WINDOW, POLYORDER)
