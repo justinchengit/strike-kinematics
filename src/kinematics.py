@@ -33,3 +33,10 @@ def interpolate(df, max_gap=5):
     for col in ["x", "y"]:
         df[col] = df.groupby("bodypart")[col].transform(lambda s: fill_short_gaps(s, max_gap))
     return df
+
+
+def to_meters(df, pixels_per_meter):
+    df = df.copy()
+    df["x_m"] = df["x"] / pixels_per_meter
+    df["y_m"] = df["y"] / pixels_per_meter
+    return df
