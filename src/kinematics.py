@@ -62,5 +62,7 @@ def kinematics(df, fps):
     for bp, g in df.groupby("bodypart", sort=False):
         x, y = g["x_m"].to_numpy(float), g["y_m"].to_numpy(float)
         vx, vy = savgol_segments(x, dt, 1), savgol_segments(y, dt, 1)
-        out[bp] = {"speed_mps": np.hypot(vx, vy)}
+        ax, ay = savgol_segments(x, dt, 2), savgol_segments(y, dt, 2)
+        accel = np.hypot(ax, ay)
+        out[bp] = {"speed_mps": np.hypot(vx, vy), "accel_mps2": accel}
     return out
