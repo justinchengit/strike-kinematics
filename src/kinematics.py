@@ -46,11 +46,21 @@ def to_meters(df, pixels_per_meter):
     return df
 
 
-def savgol_segments(v):
+def savgol_segments(v, dt, deriv=0):
     out = np.full(len(v), np.nan)
     ok = ~np.isnan(v)
     edges = np.flatnonzero(np.diff(np.r_[0, ok.astype(int), 0]))
     for a, b in zip(edges[::2], edges[1::2]):
         if b - a >= WINDOW:
-            out[a:b] = savgol_filter(v[a:b], WINDOW, POLYORDER)
+            out[a:b] = savgol_filter(v[a:b], WINDOW, POLYORDER, deriv=deriv, delta=dt)
+    return out
+
+
+def kinematics(df, fps):
+    dt = 1.0 / fps
+    out = {}
+    for bp, g in df.groupby("bodypart", sort=False):
+        x, y = g["x_m"].to_numpy(float), g["y_m"].to_numpy(float)
+        vx, vy = savgol_segments(x, dt, 1), savgol_segments(y, dt, 1)
+        out[bp] = {"speed_mps": np.hypot(vx, vy)}
     return out
