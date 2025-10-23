@@ -46,5 +46,11 @@ def to_meters(df, pixels_per_meter):
     return df
 
 
-def smooth(v):
-    return savgol_filter(v, WINDOW, POLYORDER)
+def savgol_segments(v):
+    out = np.full(len(v), np.nan)
+    ok = ~np.isnan(v)
+    edges = np.flatnonzero(np.diff(np.r_[0, ok.astype(int), 0]))
+    for a, b in zip(edges[::2], edges[1::2]):
+        if b - a >= WINDOW:
+            out[a:b] = savgol_filter(v[a:b], WINDOW, POLYORDER)
+    return out
