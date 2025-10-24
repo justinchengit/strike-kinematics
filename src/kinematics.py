@@ -58,11 +58,20 @@ def savgol_segments(v, dt, deriv=0):
 
 def kinematics(df, fps, mass_kg):
     dt = 1.0 / fps
-    out = {}
+    parts = []
     for bp, g in df.groupby("bodypart", sort=False):
         x, y = g["x_m"].to_numpy(float), g["y_m"].to_numpy(float)
         vx, vy = savgol_segments(x, dt, 1), savgol_segments(y, dt, 1)
         ax, ay = savgol_segments(x, dt, 2), savgol_segments(y, dt, 2)
         accel = np.hypot(ax, ay)
-        out[bp] = {"speed_mps": np.hypot(vx, vy), "accel_mps2": accel, "force_N": mass_kg * accel}
-    return out
+        parts.append(pd.DataFrame({
+            "frame": g["frame"].to_numpy(),
+            "bodypart": bp,
+            "time_s": g["frame"].to_numpy() * dt,
+            "x_m": savgol_segments(x, dt),
+            "y_m": savgol_segments(y, dt),
+            "speed_mps": np.hypot(vx, vy),
+            "accel_mps2": accel,
+            "force_N": mass_kg * accel,
+        }))
+    return pd.concat(parts, ignore_index=True)
