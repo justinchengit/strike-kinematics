@@ -56,7 +56,7 @@ def savgol_segments(v, dt, deriv=0):
     return out
 
 
-def kinematics(df, fps):
+def kinematics(df, fps, mass_kg):
     dt = 1.0 / fps
     out = {}
     for bp, g in df.groupby("bodypart", sort=False):
@@ -64,5 +64,5 @@ def kinematics(df, fps):
         vx, vy = savgol_segments(x, dt, 1), savgol_segments(y, dt, 1)
         ax, ay = savgol_segments(x, dt, 2), savgol_segments(y, dt, 2)
         accel = np.hypot(ax, ay)
-        out[bp] = {"speed_mps": np.hypot(vx, vy), "accel_mps2": accel}
+        out[bp] = {"speed_mps": np.hypot(vx, vy), "accel_mps2": accel, "force_N": mass_kg * accel}
     return out
