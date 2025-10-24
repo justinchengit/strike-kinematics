@@ -75,3 +75,11 @@ def kinematics(df, fps, mass_kg):
             "force_N": mass_kg * accel,
         }))
     return pd.concat(parts, ignore_index=True)
+
+
+def run(dlc_path, fps, pixels_per_meter, mass_kg, p_cutoff=0.6, max_gap=5):
+    df = load_dlc(dlc_path)
+    df = filter_likelihood(df, p_cutoff)
+    df = interpolate(df, max_gap)
+    df = to_meters(df, pixels_per_meter)
+    return kinematics(df, fps, mass_kg)
