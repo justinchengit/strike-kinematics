@@ -4,6 +4,7 @@ FPS = 50000
 PIXELS_PER_METER = 20000
 N_FRAMES = 4000
 
+rng = np.random.default_rng(0)
 t = np.arange(N_FRAMES) / FPS
 
 pivot = np.array([300.0, 200.0])
@@ -17,3 +18,10 @@ points = {
     "propodus": (np.full(N_FRAMES, 220.0), np.full(N_FRAMES, 210.0)),
     "rostrum": (np.full(N_FRAMES, 120.0), np.full(N_FRAMES, 260.0)),
 }
+
+data = {}
+for bp, (x, y) in points.items():
+    x = x + rng.normal(0, 0.3, N_FRAMES)
+    y = y + rng.normal(0, 0.3, N_FRAMES)
+    data[("sim", bp, "x")] = x
+    data[("sim", bp, "y")] = y
