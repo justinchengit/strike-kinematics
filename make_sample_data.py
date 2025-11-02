@@ -13,4 +13,7 @@ theta = np.pi / 2 - (np.pi / 2) / (1 + np.exp(-(t - t0) / tau))
 
 points = {
     "dactyl_tip": (pivot[0] + arm_px * np.cos(theta), pivot[1] + arm_px * np.sin(theta)),
+    "dactyl_base": (np.full(N_FRAMES, pivot[0]), np.full(N_FRAMES, pivot[1])),
+    "propodus": (np.full(N_FRAMES, 220.0), np.full(N_FRAMES, 210.0)),
+    "rostrum": (np.full(N_FRAMES, 120.0), np.full(N_FRAMES, 260.0)),
 }
