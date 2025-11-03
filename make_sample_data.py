@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
 
 FPS = 50000
 PIXELS_PER_METER = 20000
@@ -32,3 +35,11 @@ for bp, (x, y) in points.items():
     data[("sim", bp, "x")] = x
     data[("sim", bp, "y")] = y
     data[("sim", bp, "likelihood")] = lik
+
+df = pd.DataFrame(data)
+df.columns = pd.MultiIndex.from_tuples(df.columns, names=["scorer", "bodyparts", "coords"])
+
+Path("data").mkdir(exist_ok=True)
+df.to_csv("data/sample_strike.csv")
+df.to_hdf("data/sample_strike.h5", key="df_with_missing", mode="w")
+print(f"wrote data/sample_strike.csv and .h5 ({N_FRAMES} frames, fps={FPS}, px/m={PIXELS_PER_METER})")
