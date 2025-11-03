@@ -23,5 +23,12 @@ data = {}
 for bp, (x, y) in points.items():
     x = x + rng.normal(0, 0.3, N_FRAMES)
     y = y + rng.normal(0, 0.3, N_FRAMES)
+    lik = rng.uniform(0.9, 1.0, N_FRAMES)
+    if bp == "dactyl_tip":
+        drop = rng.choice(N_FRAMES, 40, replace=False)
+        lik[drop] = rng.uniform(0.05, 0.5, 40)
+        lik[1200:1203] = 0.2
+        lik[3000:3010] = 0.2
     data[("sim", bp, "x")] = x
     data[("sim", bp, "y")] = y
+    data[("sim", bp, "likelihood")] = lik
