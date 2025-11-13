@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 from src.kinematics import run
 
@@ -12,3 +13,7 @@ p.add_argument("--max-gap", type=int, default=5)
 a = p.parse_args()
 
 df = run(a.dlc_path, a.fps, a.pixels_per_meter, a.mass_kg, a.p_cutoff, a.max_gap)
+Path("outputs").mkdir(exist_ok=True)
+df.to_csv("outputs/kinematics.csv", index=False)
+
+print("wrote outputs/kinematics.csv")
