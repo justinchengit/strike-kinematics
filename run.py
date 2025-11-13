@@ -17,3 +17,6 @@ Path("outputs").mkdir(exist_ok=True)
 df.to_csv("outputs/kinematics.csv", index=False)
 
 print("wrote outputs/kinematics.csv")
+for col, unit in [("speed_mps", "m/s"), ("accel_mps2", "m/s^2"), ("force_N", "N")]:
+    i = df[col].idxmax()
+    print(f"peak {col}: {df.at[i, col]:.4g} {unit} ({df.at[i, 'bodypart']}, t={df.at[i, 'time_s'] * 1e3:.3f} ms)")
